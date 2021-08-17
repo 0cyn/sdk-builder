@@ -30,6 +30,8 @@ jobs:
     - name: Building SDK
       run: |
         python sdk_builder.py
+    - name: Compressing Artifact
+      run: | 
         cd .sdkbuilder/System/Library/
         zip -r ../../fws.zip PrivateFrameworks/
         cd ../..
