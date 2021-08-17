@@ -32,7 +32,7 @@ jobs:
         python sdk_builder.py
     - name: Compressing Artifact
       run: | 
-        zip fws.zip .sdkbuilder
+        zip -r fws.zip .sdkbuilder
     - name: Upload Zipped PrivateFrameworks
       uses: actions/upload-artifact@v2.2.4
       with:
