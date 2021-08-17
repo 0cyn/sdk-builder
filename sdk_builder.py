@@ -27,6 +27,11 @@ def dump(fold, fw_name):
 
     hg = HeaderGenerator(objc_lib)
     os.makedirs(f'{working_dir}/System/Library/{fold}/{fw_name}.framework', exist_ok=True)
+    
+    tbd_dict = TBDGenerator(library, True, objc_lib).dict
+    with open(f'{working_dir}/System/Library/{fold}/{fw_name}.framework/{fw_name}.tbd', 'w') as tbd_out:
+        tbd_out.write(TapiYAMLWriter.write_out(tbd_dict))
+        
     os.makedirs(f'{working_dir}/System/Library/{fold}/{fw_name}.framework/Headers', exist_ok=True)
     for oclass in objc_lib.classlist:
         for header_name in hg.headers:
