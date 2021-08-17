@@ -28,4 +28,11 @@ jobs:
         wget https://headers.krit.me/dsc/14.5/full.zip
         unzip full.zip
         python sdk_builder.py
-    
+        cd .sdkbuilder/System/Library/
+        zip -r ../../fws.zip PrivateFrameworks/
+        cd ../..
+    - name: Upload Zipped PrivateFrameworks
+      uses: actions/upload-artifact@v2.2.4
+      with:
+        name: PrivateFrameworks
+        path: fws.zip
