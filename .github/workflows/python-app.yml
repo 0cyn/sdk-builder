@@ -23,10 +23,12 @@ jobs:
         python -m pip install --upgrade pip
         pip install git+git://github.com/kritantadev/ktool@python3.10
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-    - name: Run
+    - name: Setting up run dependencies
       run: |
         wget https://headers.krit.me/dsc/14.5/full.zip
         unzip full.zip
+    - name: Building SDK
+      run: |
         python sdk_builder.py
         cd .sdkbuilder/System/Library/
         zip -r ../../fws.zip PrivateFrameworks/
