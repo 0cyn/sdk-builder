@@ -11,6 +11,7 @@ from ktool.dyld import Dyld
 from ktool.generator import TBDGenerator
 from ktool.headers import HeaderGenerator
 from ktool.util import TapiYAMLWriter
+import shutil
 
 start_ts = time.time()
 
@@ -27,6 +28,7 @@ def dump(fold, fw_name):
 
     hg = HeaderGenerator(objc_lib)
     os.makedirs(f'{working_dir}/System/Library/{fold}/{fw_name}.framework', exist_ok=True)
+    shutil.copyfile(f'./System/Library/{fold}/{fw_name}.framework/{fw_name}', f'{working_dir}/System/Library/{fold}/{fw_name}.framework/{fw_name}')
     
     tbd_dict = TBDGenerator(library, True, objc_lib).dict
     with open(f'{working_dir}/System/Library/{fold}/{fw_name}.framework/{fw_name}.tbd', 'w') as tbd_out:
