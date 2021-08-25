@@ -55,14 +55,13 @@ if __name__ == '__main__':
 
     public_frameworks = []
 
-    #for fw in os.listdir('./System/Library/Frameworks/'):
-    #    public_frameworks.append(fw)
-
-    #public_frameworks = sorted(public_frameworks)
-
-    #executor = concurrent.futures.ProcessPoolExecutor(2)
-    #futures = [executor.submit(trydump, ('Frameworks', item)) for item in public_frameworks]
-    #concurrent.futures.wait(futures)
+    for fw in os.listdir('./System/Library/Frameworks/'):
+        public_frameworks.append(fw)
+    
+    public_frameworks = sorted(public_frameworks)
+    executor = concurrent.futures.ProcessPoolExecutor(2)
+    futures = [executor.submit(trydump, ('Frameworks', item)) for item in public_frameworks]
+    concurrent.futures.wait(futures)
 
     privateframeworks = []
 
