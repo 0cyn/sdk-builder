@@ -98,7 +98,7 @@ jobs:
           release_name: iOS 13.0-14.7.1 SDKs
           draft: false
           prerelease: false
-       - name: Attach binaries to release
+      - name: Attach binaries to release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
