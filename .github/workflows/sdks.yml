@@ -84,6 +84,7 @@ jobs:
 
   upload:
     needs: build
+    runs-on: ubuntu-latest
     steps:
       - name: Download artifacts
         uses: actions/download-artifact@v2
