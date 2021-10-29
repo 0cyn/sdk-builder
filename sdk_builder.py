@@ -35,11 +35,16 @@ def dump(fold, fw_name):
         tbd_out.write(TapiYAMLWriter.write_out(tbd_dict))
         
     os.makedirs(f'{working_dir}/System/Library/{fold}/{fw_name}.framework/Headers', exist_ok=True)
-    for oclass in objc_lib.classlist:
-        for header_name in hg.headers:
-            with open(f'{working_dir}/System/Library/{fold}/{fw_name}.framework/Headers' + '/' + header_name,
-                      'w') as out:
-                out.write(str(hg.headers[header_name]))
+    
+    for objc_class in objc_lib.classlist:
+        objc_class.methods = sorted(objc_class.methods, key=lambda h: h.signature)
+        objc_class.properties = sorted(objc_class.properties, key=lambda h: h.name)
+
+    
+    for header_name in hg.headers:
+        with open(f'{working_dir}/System/Library/{fold}/{fw_name}.framework/Headers' + '/' + header_name,
+                  'w') as out:
+            out.write(str(hg.headers[header_name]))
 
 
 def trydump(item):
