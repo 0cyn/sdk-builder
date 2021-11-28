@@ -44,7 +44,7 @@ jobs:
         brew install blacktop/tap/ipsw
     - name: Downloading IPSW
       run: |
-        ipsw download --version ${{ matrix.version }} --device iPhone10,3
+        ipsw download ipsw --version ${{ matrix.version }} --device iPhone10,3
     - name: Extracting dyld_shared_cache from ipsw
       run: |
         ipsw extract -d $(ls *.ipsw | xargs)
