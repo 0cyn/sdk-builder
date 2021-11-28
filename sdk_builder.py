@@ -6,7 +6,7 @@ import os
 import time
 import concurrent.futures
 from ktool.macho import MachOFile
-from ktool.objc import ObjCLibrary, LinkedClass
+from ktool.objc import ObjCImage, LinkedClass
 from ktool.dyld import Dyld
 from ktool.generator import TBDGenerator
 from ktool.headers import HeaderGenerator
@@ -24,7 +24,7 @@ def dump(fold, fw_name):
     fd = open(f'./System/Library/{fold}/{fw_name}.framework/{fw_name}', 'rb')
     machofile = MachOFile(fd)
     library = Dyld.load(machofile.slices[0])
-    objc_lib = ObjCLibrary(library)
+    objc_lib = ObjCImage(library)
     
     
     for objc_class in objc_lib.classlist:
