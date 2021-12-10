@@ -30,10 +30,11 @@ def dump(fold, fw_name):
         
     os.makedirs(f'{working_dir}/System/Library/{fold}/{fw_name}.framework/Headers', exist_ok=True)
     
-    for header_name in ktool.generate_headers(objc_lib, sort_items=True):
+    header_dict = ktool.generate_headers(objc_lib, sort_items=True)
+    for header_name in header_dict:
         with open(f'{working_dir}/System/Library/{fold}/{fw_name}.framework/Headers' + '/' + header_name,
                   'w') as out:
-            out.write(hg.headers[header_name])
+            out.write(header_dict[header_name])
 
 
 def trydump(item):
