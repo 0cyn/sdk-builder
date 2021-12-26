@@ -30,8 +30,10 @@ jobs:
         ipsw download ipsw --version ${{ matrix.version }} --device iPhone10,3
     - name: Extracting dyld_shared_cache from ipsw
       run: |
-        ipsw extract -d $(ls *.ipsw | xargs)
-        mv $(find . -name dyld_shared_cache_arm64 | xargs) ./
+        unzip iPhone10,3,iPhone10,6_15.0_19A346_Restore.ipsw 
+        mkdir dmg
+        hdiutil attach 018-80055-001.dmg -mountroot $PWD/dmg
+        cp dmg/Sky19A346.D22D221OS/System/Library/Caches/com.apple.dyld/* .
     - name: Set up python dependencies
       run: |
         python -m pip install --upgrade pip
