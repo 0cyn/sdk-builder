@@ -6,7 +6,6 @@ import os
 import time
 import concurrent.futures
 import ktool
-from ktool.util import opts
 import shutil
 
 start_ts = time.time()
@@ -17,7 +16,6 @@ working_dir = ".sdkbuilder"
 
 
 def dump(fold, fw_name):
-    opts.USE_SYMTAB_INSTEAD_OF_SELECTORS = True
     fd = open(f'./System/Library/{fold}/{fw_name}.framework/{fw_name}', 'rb')
     
     library = ktool.load_image(fd)
