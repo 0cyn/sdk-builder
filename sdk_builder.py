@@ -34,7 +34,7 @@ def dump(fold, fw_name):
     for header_name in header_dict:
         with open(f'{working_dir}/System/Library/{fold}/{fw_name}.framework/Headers' + '/' + header_name,
                   'w') as out:
-            out.write(header_dict[header_name])
+            out.write(str(header_dict[header_name]))
 
 
 def trydump(item):
