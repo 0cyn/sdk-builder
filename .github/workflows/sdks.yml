@@ -52,7 +52,7 @@ jobs:
     - name: Set up python dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install progressbar2 git+git://github.com/kritantadev/ktool.git dyldextractor
+        pip install progressbar2 k2l dyldextractor
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     - name: Extracting binaries from dyld shared cache
       run: |
