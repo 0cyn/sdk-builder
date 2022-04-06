@@ -87,8 +87,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: 1.0.0
-          release_name: ktool 1.0.0 | iOS 13.0-14.8 SDKs
+          tag_name: 1.2.0
+          release_name: ktool 1.2.0 | iOS 13.0-14.8 SDKs
           draft: false
           prerelease: false
       - name: Attach binaries to release
@@ -104,4 +104,4 @@ jobs:
               assets+=("-a" "$asset.zip")
             fi
           done
-          hub release edit "${assets[@]}" -m "iOS 13.0-14.8 SDKs" "1.0.0" 
+          hub release edit "${assets[@]}" -m "iOS 13.0-14.8 SDKs" "1.2.0" 
