@@ -54,7 +54,7 @@ if __name__ == '__main__':
         public_frameworks.append(fw)
     
     public_frameworks = sorted(public_frameworks)
-    executor = concurrent.futures.ProcessPoolExecutor(3)
+    executor = concurrent.futures.ProcessPoolExecutor(2)
     futures = [executor.submit(trydump, ('Frameworks', item)) for item in public_frameworks]
     concurrent.futures.wait(futures)
 
@@ -65,6 +65,6 @@ if __name__ == '__main__':
 
     privateframeworks = sorted(privateframeworks)
 
-    executor = concurrent.futures.ProcessPoolExecutor(3)
+    executor = concurrent.futures.ProcessPoolExecutor(2)
     futures = [executor.submit(trydump, ('PrivateFrameworks', item)) for item in privateframeworks]
     concurrent.futures.wait(futures)
