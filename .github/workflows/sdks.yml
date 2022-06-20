@@ -54,7 +54,7 @@ jobs:
         python -m pip install --upgrade pip
         pip install progressbar2 dyldextractor
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-        git clone https://github.com/cxnder/ktool.git && cd ktool && ./dev_install.sh
+        git clone https://github.com/cxnder/ktool.git && cd ktool && chmod +x dev_install.sh && ./dev_install.sh
     - name: Building SDK
       run: |
         python3 sdkgen.py ${{ matrix.version }}
