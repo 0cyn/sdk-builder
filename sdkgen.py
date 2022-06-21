@@ -81,7 +81,7 @@ class DEAdapter:
     def extract_all(self, dsc_folder, output_folder):
         cwd = os.getcwd()
         os.chdir(dsc_folder)
-        system(f'dyldex_all dyld_shared_cache_arm64')
+        system(f'dyldex_all -j 1 dyld_shared_cache_arm64')
         system(f'mv binaries/System ./')
         os.chdir(cwd)
         system(f'mv {dsc_folder}/System/* {output_folder}')
@@ -135,7 +135,7 @@ if __name__ == "__main__":
             file_batch_list.append(filename)
 
     public_frameworks = sorted(list(set(file_batch_list)))
-    executor = concurrent.futures.ProcessPoolExecutor(multiprocessing.cpu_count())
+    executor = concurrent.futures.ProcessPoolExecutor(multiprocessing.cpu_count()-1)
     futures = [executor.submit(trydump, (item)) for item in public_frameworks]
     concurrent.futures.wait(futures)
 
