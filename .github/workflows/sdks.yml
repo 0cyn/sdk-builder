@@ -5,7 +5,7 @@ name: SDKs
 
 on:
   push:
-    branches: [ pr ]
+    branches: [ main ]
 
 jobs:
   build:
@@ -42,20 +42,7 @@ jobs:
         python-version: '3.9.5'
     - name: Install blacktop/ipsw
       run: |
-        git clone https://github.com/blacktop/ipsw
-        cd ipsw
-        curl -L https://github.com/blacktop/ipsw/releases/latest/download/ipsw_"$(git describe --tags $(git rev-list --tags --max-count=1) | cut -c2-)"_linux_x86_64.deb -o ipsw.deb
-        sudo dpkg -i ipsw.deb
-        cd
-    - name: Install apfs-fuse
-      run: |
-        sudo apt update && sudo apt install -y libfuse3-dev
-        git clone --recursive https://github.com/sgan81/apfs-fuse
-        cd apfs-fuse
-        mkdir build && cd build
-        cmake ../
-        make -j$(nproc --all) install
-        cd
+        sudo snap install ipsw                     # Blacktop's tap doesn't support Linux currently
     - name: Set up python dependencies
       run: |
         python -m pip install --upgrade pip
