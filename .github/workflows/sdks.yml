@@ -49,6 +49,7 @@ jobs:
         cd
     - name: Install apfs-fuse
       run: |
+        sudo apt update && sudo apt install -y fuse3
         git clone --recursive https://github.com/sgan81/apfs-fuse
         cd apfs-fuse
         mkdir build && cd build
