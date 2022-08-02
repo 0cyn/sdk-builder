@@ -48,7 +48,7 @@ def system_pipe_output(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, echo
 
 class IPSWAdapter:
     def __init__(self):
-        self.ipsw_path = '/usr/local/bin/ipsw'
+        self.ipsw_path = 'ipsw'
 
     def try_dl_and_extract(self, version, device, output_folder, max_dl_attempts=5):
         attempts = max_dl_attempts
