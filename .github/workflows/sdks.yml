@@ -42,7 +42,7 @@ jobs:
         python-version: '3.9.5'
     - name: Install blacktop/ipsw
       run: |
-        sudo snap install ipsw                     # Blacktop's tap doesn't support Linux currently
+        sudo snap install ipsw                # Blacktop's tap doesn't support Linux currently
     - name: Set up python dependencies
       run: |
         python -m pip install --upgrade pip
@@ -52,13 +52,15 @@ jobs:
     - name: Building SDK
       run: |
         python3 sdkgen.py ${{ matrix.version }}
-    - name: Compressing Artifact
+    - name: Compress Artifact
       run: |
-        zip -r SDK.zip ${{ matrix.version }}.extracted
+        pushd ${{ matrix.version }}.extracted
+        zip -9 -r ../SDK.zip *
+        popd
     - name: Upload Zipped SDK
       uses: actions/upload-artifact@v2.2.4
       with:
-        name: ${{ matrix.version }}-SDK.zip
+        name: iPhoneOS${{ matrix.version }}-SDK.zip
         path: SDK.zip
 
 
@@ -76,8 +78,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: PRTEST
-          release_name: PRTEST
+          tag_name: LinuxTest
+          release_name: LinuxTest
           draft: false
           prerelease: false
       - name: Attach binaries to release
@@ -89,8 +91,7 @@ jobs:
           for asset in ./*; do               # loop the assets in the bin folder
             if [ -d "$asset" ]
             then
-              zip -r $asset.zip $asset/
-              assets+=("-a" "$asset.zip")
+              assets+=("-a" "$asset")
             fi
           done
-          hub release edit "${assets[@]}" -m "PRTEST" "PRTEST"
+          hub release edit "${assets[@]}" -m "LinuxTest" "LinuxTest"
