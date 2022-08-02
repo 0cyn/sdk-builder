@@ -5,7 +5,7 @@ name: SDKs
 
 on:
   push:
-    branches: [ main ]
+    branches: [ pr ]
 
 jobs:
   build:
@@ -32,7 +32,7 @@ jobs:
           - "13.1"
           - "13.0"
 
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v2
