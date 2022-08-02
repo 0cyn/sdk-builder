@@ -6,7 +6,7 @@ import os
 import glob
 import ktool
 import time
-
+import json
 
 def system(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, echo=False):
     proc = subprocess.Popen("" + cmd,
@@ -58,7 +58,10 @@ class IPSWAdapter:
             attempts -= 1
             time.sleep(10)
 
-        self.extract(output_folder)
+        if self.extract(output_folder):
+            system('rm *.ipsw')
+
+
 
     def extract(self, output_folder, ipsw_name='$(ls *.ipsw | xargs)'):
         if not system(f'{self.ipsw_path} extract -d {ipsw_name}'):
@@ -81,7 +84,7 @@ class DEAdapter:
     def extract_all(self, dsc_folder, output_folder):
         cwd = os.getcwd()
         os.chdir(dsc_folder)
-        system(f'dyldex_all -j 1 dyld_shared_cache_arm64')
+        system(f'dyldex_all -j 12 dyld_shared_cache_arm64')
         system(f'mv binaries/System ./')
         os.chdir(cwd)
         system(f'mv {dsc_folder}/System/* {output_folder}')
@@ -96,6 +99,20 @@ def dump(filename):
     tbd_text = ktool.generate_text_based_stub(library, compatibility=True)
     with open(f'{filename}.tbd', 'w') as tbd_out:
         tbd_out.write(tbd_text)
+
+    data = library.serialize()
+    objc_data = objc_lib.serialize()
+
+    framework_data = {
+        'filename': filename,
+        'comment': 'Info Dumped with ktool + sdk-builder',
+        'ktool-version': ktool.util.KTOOL_VERSION,
+        'data': data,
+        'objc': objc_data
+    }
+
+    with open(f'{filename}.json', 'w') as fp:
+        json.dump(framework_data, fp)
 
     os.makedirs(f'{os.path.dirname(filename)}/Headers', exist_ok=True)
 
@@ -125,15 +142,17 @@ if __name__ == "__main__":
         ipsw.try_dl_and_extract(f'{vers}', 'iPhone10,3', f'{vers}.dsc')
     if not os.path.exists(f'{vers}.bins'):
         de.extract_all(f'{vers}.dsc', f'{vers}.bins')
-
-    system(f"cp -r {vers}.bins {vers}.extracted")
+    if not os.path.exists(f'{vers}.extracted'):
+        system(f"cp -r {vers}.bins {vers}.extracted")
 
     file_batch_list = []
 
     for filename in glob.iglob(f'{vers}.extracted/' + '**/**', recursive=True):
         if os.path.isfile(filename):
-            file_batch_list.append(filename)
-
+            if not os.path.exists(filename + '.tbd'):
+                if not '.h' in filename and not '.tbd' in filename:
+                    file_batch_list.append(filename)
+    print(file_batch_list)
     public_frameworks = sorted(list(set(file_batch_list)))
     executor = concurrent.futures.ProcessPoolExecutor(multiprocessing.cpu_count()-1)
     futures = [executor.submit(trydump, (item)) for item in public_frameworks]
