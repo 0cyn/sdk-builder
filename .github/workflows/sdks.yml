@@ -46,7 +46,7 @@ jobs:
         cd ipsw
         VER="$(git describe --tags $(git rev-list --tags --max-count=1) | cut -c2-)"
         cd ..
-        curl -LO "https://github.com/blacktop/ipsw/releases/latest/download/ipsw_"$VER"_linux_x86_64.deb"
+        curl -LO https://github.com/blacktop/ipsw/releases/latest/download/ipsw_"$VER"_linux_x86_64.deb
         sudo dpkg -i ipsw_$VER_linux_x86_64.deb
     - name: Set up python dependencies
       run: |
