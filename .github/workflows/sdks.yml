@@ -25,9 +25,7 @@ jobs:
           - "13.7"
           - "13.6"
           - "13.5"
-          - "13.4.1"
           - "13.4"
-          - "13.2.2"
           - "13.2"
           - "13.1"
           - "13.0"
@@ -35,12 +33,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Set up Python
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v4
       with:
         python-version: '3.9.5'
-    - name: Install blacktop/ipsw                                 # Blacktop's brew tap doesn't support Linux currently
+    - name: Install blacktop/ipsw                             # Blacktop's brew tap doesn't support Linux currently
       run: |
         git clone https://github.com/blacktop/ipsw
         cd ipsw
@@ -62,26 +60,37 @@ jobs:
         pip install progressbar2 dyldextractor poetry
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
         git clone https://github.com/cxnder/ktool.git && cd ktool && chmod +x dev_install.sh && ./dev_install.sh
-    - name: Building SDK
+    - name: Build SDK
       run: |
         python3 sdkgen.py ${{ matrix.version }}
-    - name: Compressing Artifact
+    - name: Prep SDK for artifact upload
       run: |
-        zip -r SDK.zip ${{ matrix.version }}.extracted
-    - name: Upload Zipped SDK
-      uses: actions/upload-artifact@v2.2.4
+        mv ${{ matrix.version }}.extracted iPhoneOS${{ matrix.version }}.sdk
+        zip -9 -r iPhoneOS${{ matrix.version }}.sdk.zip iPhoneOS${{ matrix.version }}.sdk
+    - name: Upload SDK artifact
+      uses: actions/upload-artifact@v3
       with:
-        name: ${{ matrix.version }}-SDK.zip
-        path: SDK.zip
+        name: ${{ matrix.version }}-Container
+        path: iPhoneOS${{ matrix.version }}.sdk.zip
 
 
   upload:
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Download artifacts
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
+
+      - name: Extract SDKs from artifacts                     # SDKs get put into artifact-named directories by the artifact actions
+        run: |
+          set -x
+          mkdir sdks/
+          for container in ./*Container; do
+            if [[ -d "$container" ]]; then
+              mv $container/*.zip sdks/                       # Note: for some reason you can't cd into the artifact dirs?!
+            fi
+          done
 
       - name: Create Release
         id: create_release
@@ -89,21 +98,17 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: PRTEST
-          release_name: PRTEST
+          tag_name: Linux
+          release_name: Linux
           draft: false
           prerelease: false
-      - name: Attach binaries to release
+      - name: Attach SDKs to release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -x
-          assets=()
-          for asset in ./*; do
-            if [ -d "$asset" ]
-            then
-              zip -r $asset.zip $asset/
-              assets+=("-a" "$asset.zip")
-            fi
+          sdks=()
+          for sdk in sdks/*.zip; do
+            sdks+=("-a" "$sdk")
           done
-          hub release edit "${assets[@]}" -m "PRTEST" "PRTEST"
+          hub release edit "${sdks[@]}" -m "Linux" "Linux"
