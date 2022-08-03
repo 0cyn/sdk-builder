@@ -84,7 +84,7 @@ class DEAdapter:
     def extract_all(self, dsc_folder, output_folder):
         cwd = os.getcwd()
         os.chdir(dsc_folder)
-        system(f'dyldex_all -j 12 dyld_shared_cache_arm64')
+        system(f'dyldex_all -j$(nproc --all) dyld_shared_cache_arm64')
         system(f'mv binaries/System ./')
         os.chdir(cwd)
         system(f'mv {dsc_folder}/System/* {output_folder}')
