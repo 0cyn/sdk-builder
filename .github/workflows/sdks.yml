@@ -98,8 +98,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: Linux
-          release_name: Linux
+          tag_name: 1.4.0
+          release_name: iOS 13.0-15.5 SDKs
           draft: false
           prerelease: false
       - name: Attach SDKs to release
@@ -111,4 +111,4 @@ jobs:
           for sdk in sdks/*.zip; do
             sdks+=("-a" "$sdk")
           done
-          hub release edit "${sdks[@]}" -m "Linux" "Linux"
+          hub release edit "${assets[@]}" -m "iOS 13.0-15.5 SDKs" "1.4.0"
