@@ -111,4 +111,4 @@ jobs:
           for sdk in sdks/*.zip; do
             sdks+=("-a" "$sdk")
           done
-          hub release edit "${assets[@]}" -m "iOS 13.0-15.5 SDKs" "1.4.0"
+          hub release edit "${sdks[@]}" -m "iOS 13.0-15.5 SDKs" "1.4.0"
