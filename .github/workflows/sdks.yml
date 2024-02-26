@@ -28,7 +28,6 @@ jobs:
           - "13.4"
           - "13.2"
           - "13.1"
-          - "13.0"
 
     runs-on: ubuntu-latest
 
